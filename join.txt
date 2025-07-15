@@ -1,0 +1,108 @@
+1)  select name,dept_name from employees join departments on employees.department_id=departments.dept_id;
++---------------+-------------+
+| name          | dept_name   |
++---------------+-------------+
+| Alice Johnson | Engineering |
+| Bob Smith     | Marketing   |
+| Carol Davis   | Engineering |
+| David Wilson  | Sales       |
+| Eva Brown     | Marketing   |
++---------------+-------------+
+
+2)select name,dept_name from employees left join departments on employees.department_id=departments.dept_id;
++---------------+-------------+
+| name          | dept_name   |
++---------------+-------------+
+| Alice Johnson | Engineering |
+| Bob Smith     | Marketing   |
+| Carol Davis   | Engineering |
+| David Wilson  | Sales       |
+| Eva Brown     | Marketing   |
+| Frank Miller  | NULL        |
++---------------+-------------+
+
+3) select name,dept_name from employees left join departments on employees.department_id=departments.dept_id;
++---------------+-------------+
+| name          | dept_name   |
++---------------+-------------+
+| Alice Johnson | Engineering |
+| Bob Smith     | Marketing   |
+| Carol Davis   | Engineering |
+| David Wilson  | Sales       |
+| Eva Brown     | Marketing   |
+| Frank Miller  | NULL        |
++---------------+-------------+
+
+4) select name,dept_name from employees right join departments on employees.department_id=departments.dept_id union  select name,dept_name from employees left join departments on employees.department_id=departments.dept_id;
++---------------+-------------+
+| name          | dept_name   |
++---------------+-------------+
+| Alice Johnson | Engineering |
+| Bob Smith     | Marketing   |
+| Carol Davis   | Engineering |
+| David Wilson  | Sales       |
+| Eva Brown     | Marketing   |
+| NULL          | HR          |
+| Frank Miller  | NULL        |
++---------------+-------------+
+
+5) select a.name,b.dept_name,c.name as manager from employees a join departments b on a.department_id=b.dept_id join employees c on b.manager_id=c.emp_id;
++---------------+-------------+--------------+
+| name          | dept_name   | manager      |
++---------------+-------------+--------------+
+| Alice Johnson | Engineering | Carol Davis  |
+| Bob Smith     | Marketing   | Eva Brown    |
+| Carol Davis   | Engineering | Carol Davis  |
+| David Wilson  | Sales       | David Wilson |
+| Eva Brown     | Marketing   | Eva Brown    |
++---------------+-------------+--------------+
+
+
+6)   select employees.name,departments.dept_name,projects.project_name,employee_projects.role from employees join departments on employees.department_id=dept_id join projects on departments.dept_id=projects.department_id join employee_projects on projects.project_id=employee_projects.project_id;
++---------------+-------------+-----------------------+----------------------+
+| name          | dept_name   | project_name          | role                 |
++---------------+-------------+-----------------------+----------------------+
+| Alice Johnson | Engineering | Website Redesign      | Developer            |
+| Carol Davis   | Engineering | Website Redesign      | Developer            |
+| Alice Johnson | Engineering | Mobile App            | Lead Developer       |
+| Carol Davis   | Engineering | Mobile App            | Lead Developer       |
+| Bob Smith     | Marketing   | Social Media Campaign | Marketing Specialist |
+| Eva Brown     | Marketing   | Social Media Campaign | Marketing Specialist |
+| David Wilson  | Sales       | CRM Implementation    | Project Manager      |
+| David Wilson  | Sales       | CRM Implementation    | Sales Lead           |
+| Bob Smith     | Marketing   | Social Media Campaign | Campaign Manager     |
+| Eva Brown     | Marketing   | Social Media Campaign | Campaign Manager     |
++---------------+-------------+-----------------------+----------------------+
+
+7) select departments.dept_name,sum(employees.salary) as total_salary from departments left join employees on departments.dept_id=employees.department_id group by departments.dept_name;
++-------------+--------------+
+| dept_name   | total_salary |
++-------------+--------------+
+| Engineering |       155000 |
+| HR          |         NULL |
+| Marketing   |       135000 |
+| Sales       |        90000 |
++-------------+--------------+
+
+8) select employees.name,projects.project_name,projects.end_date from employees join employee_projects on employees.emp_id=employee_projects.emp_id join projects on employee_projects.project_id=projects.project_id where projects.end_date>'2023-12-31';
+Empty set (0.001 sec)
+
+
+9)  select employees.name,count(project_name) as PROJECTS  from employees join projects on employees.department_id=projects.department_id group by employees.name;
++---------------+----------+
+| name          | PROJECTS |
++---------------+----------+
+| Alice Johnson |        2 |
+| Bob Smith     |        1 |
+| Carol Davis   |        2 |
+| David Wilson  |        1 |
+| Eva Brown     |        1 |
++---------------+----------+
+
+10)  select employees.name,hire_date,projects.project_name,projects.start_date from employees join employee_projects on employees.emp_id=employee_projects.emp_id join projects on employee_projects.project_id=projects.project_id where year(hire_date)=year(projects.start_date);
++---------------+------------+-----------------------+------------+
+| name          | hire_date  | project_name          | start_date |
++---------------+------------+-----------------------+------------+
+| Bob Smith     | 2023-03-22 | Social Media Campaign | 2023-01-15 |
+| Alice Johnson | 2023-01-15 | Mobile App            | 2023-04-01 |
++---------------+------------+-----------------------+------------+

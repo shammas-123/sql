@@ -1,0 +1,102 @@
+1) delimiter //
+    create procedure getemployeebydepartment(in dept_name varchar(20))
+    -> begin
+    -> select emp_id,concat(first_name,last_name) as fullname,salary from employees where department=dept_name;
+    -> end//
+ delimiter ;
+
+ call getemployeebydepartment('IT');
++--------+------------+--------+
+| emp_id | fullname   | salary |
++--------+------------+--------+
+|      1 | JohnSmith  |  75000 |
+|      3 | MikeBrown  |  95000 |
+|      7 | AlexMiller |  68000 |
++--------+------------+--------+
+
+2)delimiter //
+   create function calculateannualbonus(emp_salary decimal(10,2),yr_service int)
+    -> returns decimal(10,2)
+    -> reads sql data
+    -> deterministic
+    -> begin
+    -> declare bonus_percent decimal(10,2)
+    -> declare bonus_amount decimal(10,2)
+    -> set bonus_percent=least(yr_service*5,20);
+    -> set bonus_amount=emp_salary*(bonus_percent/100);
+    -> return bonus_amount;
+    -> end //
+
+    DELIMITER ;
+
+    select calculateannualbonus(75000,4) as bonus;
++----------+
+| bonus    |
++----------+
+| 15000.00 |
++----------+
+
+
+3)
+    delimiter //
+    create procedure updateemployeesalary(in emp_id int,in new_salary decimal(10,2),out old_salary(10,2))
+    -> begin
+    -> select salary into old_salary from employees where employees.emp_id=emp_id;
+    -> update employees set salary=new_salary where employees.emp_id=emp_id;
+    -> insert into salary_history values(emp_id,old_salary,new_salary,now(),'salary Update');
+    -> end //
+     DELIMITER ;
+        set @old_salary=0;
+       call  updateemployeesalary(3,100000,@0ld_salary);
+       select @old_salary;
++-------------+
+| @old_salary |
++-------------+
+|           0 |
++-------------+
+
+4) delimiter //
+     create function getemployeegrade(salary decimal(10,2))
+    -> returns varchar(20)
+    -> reads sql data
+    -> deterministic
+    -> begin
+    -> declare result varchar(20);
+    ->  if salary<55000 then  set result='D';
+    ->  elseif salary between 55000 and 70000 then set result='C';
+    ->  elseif salary between 70000 and 85000 then set result='B';
+    ->  else set result='A';
+    -> end if;
+    -> return result;
+    -> end //
+      delimiter ;
+
+  select  getemployeegrade(89000) as grade;
++-------+
+| grade |
++-------+
+| A     |
++-------+
+
+5) delimiter //
+MariaDB [fun_database]>  create procedure genemplrep()
+    -> begin
+    -> select
+    ->  concat(first_name,last_name) as name, department, salary, getemployeegrade(salary) as grade from employees;
+    -> end//
+
+ call  genemplrep();
++------------------+------------+--------+-------+
+| name             | department | salary | grade |
++------------------+------------+--------+-------+
+| JohnSmith        | IT         |  75000 | B     |
+| SarahJohnson     | HR         |  65000 | C     |
+| MikeBrown        | IT         | 100000 | A     |
+| LisaDavis        | Finance    |  70000 | C     |
+| TomWilson        | HR         |  80000 | B     |
+| EmmaGarcia       | Finance    |  85000 | B     |
+| AlexMiller       | IT         |  68000 | C     |
+| MariaRodriguez   | Marketing  |  72000 | B     |
+| DavidTaylor      | Marketing  |  88000 | A     |
+| JenniferAnderson | Finance    |  73000 | B     |
++------------------+------------+--------+-------+

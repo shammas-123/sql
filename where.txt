@@ -1,0 +1,106 @@
+1)select product_name  from products where price>100 and stock_quantity<=20;
++-------------------+
+| product_name      |
++-------------------+
+| Office Chair      |
+| Bluetooth Speaker |
+| Microwave Oven    |
++-------------------+
+
+2)select concat(first_name,last_name) as Name from customers where age between 30 and 40;
++------------------+
+| Name             |
++------------------+
+| JohnSmith        |
+| MikeBrown        |
+| LisaDavis        |
+| MariaRodriguez   |
+| JenniferAnderson |
++------------------+
+
+3) select product_name from products where category in('Appliances','Sports','Electronics');
++-------------------+
+| product_name      |
++-------------------+
+| Laptop Pro        |
+| Coffee Maker      |
+| Wireless Mouse    |
+| Smartphone        |
+| Bluetooth Speaker |
+| Microwave Oven    |
+| Gaming Headset    |
+| Water Bottle      |
++-------------------+
+
+4) select * from orders where customer_id not in(1,3,5,7);
++----------+-------------+------------+----------+------------+--------------+------------------+---------------+
+| order_id | customer_id | product_id | quantity | order_date | total_amount | discount_percent | shipping_cost |
++----------+-------------+------------+----------+------------+--------------+------------------+---------------+
+|     1002 |           2 |          2 |        2 | 2023-07-20 |       179.98 |               10 |         15.00 |
+|     1006 |           6 |          4 |        1 | 2023-11-08 |       199.99 |                0 |         30.00 |
+|     1007 |           8 |          1 |        1 | 2023-12-15 |       149.99 |               20 |         18.00 |
+|     1008 |           2 |          6 |        2 | 2024-01-22 |       159.98 |                0 |          8.00 |
+|     1009 |           9 |         10 |        2 | 2024-02-14 |        49.99 |                0 |         12.00 |
+|     1010 |          10 |          5 |        1 | 2024-03-01 |        99.95 |               25 |          5.00 |
++----------+-------------+------------+----------+------------+--------------+------------------+---------------+
+
+5) select concat(first_name, last_name) from customers where email like '%@email.com' and first_name like 'J%';
++-------------------------------+
+| concat(first_name, last_name) |
++-------------------------------+
+| JohnSmith                     |
+| JenniferAnderson              |
++-------------------------------+
+
+6) select * from products where expiry_date is null and category='Furniture';
++------------+--------------+-----------+--------+----------------+-------------+------------------+-------------+
+| product_id | product_name | category  | price  | stock_quantity | supplier_id | manufacture_date | expiry_date |
++------------+--------------+-----------+--------+----------------+-------------+------------------+-------------+
+|          4 | Office Chair | Furniture | 199.99 |             15 |         103 | 2023-06-01       | NULL        |
+|          6 | Desk Lamp    | Furniture |  49.99 |             20 |         103 | 2023-06-12       | NULL        |
++------------+--------------+-----------+--------+----------------+-------------+------------------+-------------+
+
+
+7) select * from orders where discount_percent>10 or (shipping_cost<15 and total_amount>150);
++----------+-------------+------------+----------+------------+--------------+------------------+---------------+
+| order_id | customer_id | product_id | quantity | order_date | total_amount | discount_percent | shipping_cost |
++----------+-------------+------------+----------+------------+--------------+------------------+---------------+
+|     1004 |           7 |          1 |        1 | 2023-03-05 |      1299.99 |                0 |         10.00 |
+|     1005 |           3 |          3 |        3 | 2023-10-12 |        89.97 |               15 |         12.00 |
+|     1007 |           8 |          1 |        1 | 2023-12-15 |       149.99 |               20 |         18.00 |
+|     1008 |           2 |          6 |        2 | 2024-01-22 |       159.98 |                0 |          8.00 |
+|     1010 |          10 |          5 |        1 | 2024-03-01 |        99.95 |               25 |          5.00 |
++----------+-------------+------------+----------+------------+--------------+------------------+---------------+
+
+8) select * from customers where not city='New York';
++-------------+------------+-----------+------------------------+----------+--------------+------+-------------------+
+| customer_id | first_name | last_name | email                  | phone    | city         | age  | registration_date |
++-------------+------------+-----------+------------------------+----------+--------------+------+-------------------+
+|           2 | Sarah      | Johnson   | sarahj@email.com       | 555-0102 | Los Angeles  |   28 | 2021-11-20        |
+|           3 | Mike       | Brown     | mike.brown@email.com   | 555-0103 | Chicago      |   35 | 2023-01-10        |
+|           4 | Lisa       | Davis     | lisadavis@email.com    | 555-0104 | Houston      |   30 | 2022-07-22        |
+|           5 | Tom        | Wilson    | tom.wilson@email.com   | 555-0105 | Phoenix      |   29 | 2023-05-08        |
+|           6 | Emma       | Garcia    | emma.garcia@email.com  | 555-0106 | Philadelphia |   41 | 2021-09-12        |
+|           7 | Alex       | Miller    | alexmiller@email.com   | 555-0107 | San Antonio  |   26 | 2022-02-28        |
+|           8 | Maria      | Rodriguez | maria@email.com        | 555-0108 | San Diego    |   38 | 2022-12-05        |
+|           9 | David      | Taylor    | david.taylor@email.com | 555-0109 | Dallas       |   52 | 2021-06-18        |
+|          10 | Jennifer   | Anderson  | jen.anderson@email.com | 555-0110 | San Jose     |   33 | 2023-09-25        |
++-------------+------------+-----------+------------------------+----------+--------------+------+-------------------+
+
+9)select product_name from products where manufacture_date>'2023-07-01' and expiry_date<'2026-01-01';
++----------------+
+| product_name   |
++----------------+
+| Coffee Maker   |
+| Wireless Mouse |
+| Microwave Oven |
++----------------+
+
+10)select products.product_name,order_date,quantity,total_amount from orders join products on orders.product_id=products.product_id where year(order_date)=2023 and category='Electronics' and total_amount>200;
++--------------+------------+----------+--------------+
+| product_name | order_date | quantity | total_amount |
++--------------+------------+----------+--------------+
+| Laptop Pro   | 2023-06-15 |        1 |      1299.99 |
+| Laptop Pro   | 2023-08-10 |        1 |       699.99 |
+| Laptop Pro   | 2023-03-05 |        1 |      1299.99 |
++--------------+------------+----------+--------------+

@@ -1,0 +1,144 @@
+1) create view employee_contact_info1 as select emp_id,concat(first_name,last_name) as FullName,department,email from employees;
+
+ select * from  employee_contact_info1;
++--------+------------------+------------+--------------------------+
+| emp_id | FullName         | department | email                    |
++--------+------------------+------------+--------------------------+
+|      1 | JohnSmith        | IT         | john.smith@company.com   |
+|      2 | SarahJohnson     | HR         | sarah.j@company.com      |
+|      3 | MikeBrown        | IT         | mike.brown@company.com   |
+|      4 | LisaDavis        | Finance    | lisa.davis@company.com   |
+|      5 | TomWilson        | HR         | tom.wilson@company.com   |
+|      6 | EmmaGarcia       | Finance    | emma.garcia@company.com  |
+|      7 | AlexMiller       | IT         | alex.miller@company.com  |
+|      8 | MariaRodriguez   | Marketing  | maria.r@company.com      |
+|      9 | DavidTaylor      | Marketing  | david.taylor@company.com |
+|     10 | JenniferAnderson | Finance    | jen.anderson@company.com |
++--------+------------------+------------+--------------------------+
+
+
+
+2) create view employee_summary3 as select concat(first_name,last_name) as Fullname,department,salary,TIMESTAMPDIFF(year,hire_date,curdate()) as experience,salary+salary*0.1 from employees;
+
+ select * from  employee_summary3;
++------------------+------------+--------+------------+-------------------+
+| Fullname         | department | salary | experience | salary+salary*0.1 |
++------------------+------------+--------+------------+-------------------+
+| JohnSmith        | IT         |  75000 |          5 |           82500.0 |
+| SarahJohnson     | HR         |  65000 |          6 |           71500.0 |
+| MikeBrown        | IT         |  95000 |          6 |          104500.0 |
+| LisaDavis        | Finance    |  70000 |          4 |           77000.0 |
+| TomWilson        | HR         |  80000 |          8 |           88000.0 |
+| EmmaGarcia       | Finance    |  85000 |          5 |           93500.0 |
+| AlexMiller       | IT         |  68000 |          3 |           74800.0 |
+| MariaRodriguez   | Marketing  |  72000 |          4 |           79200.0 |
+| DavidTaylor      | Marketing  |  88000 |          7 |           96800.0 |
+| JenniferAnderson | Finance    |  73000 |          4 |           80300.0 |
++------------------+------------+--------+------------+-------------------+
+
+
+3) create view senior_employees2 as select concat(first_name,last_name) as Fullname,department,salary,hire_date from employees where hire_date<'2020-01-01' and salary>70000;
+select * from   senior_employees2;
++-------------+------------+--------+------------+
+| Fullname    | department | salary | hire_date  |
++-------------+------------+--------+------------+
+| MikeBrown   | IT         |  95000 | 2018-11-05 |
+| TomWilson   | HR         |  80000 | 2017-05-18 |
+| EmmaGarcia  | Finance    |  85000 | 2019-09-12 |
+| DavidTaylor | Marketing  |  88000 | 2018-06-18 |
++-------------+------------+--------+------------+
+
+4) create view department_stats1 as select department,count(first_name) as employees_count,avg(salary) as average_salary ,sum(salary) as total_summary from employees group by department;
+
+select * from   department_stats1;
++------------+-----------------+----------------+---------------+
+| department | employees_count | average_salary | total_summary |
++------------+-----------------+----------------+---------------+
+| Finance    |               3 |     76000.0000 |        228000 |
+| HR         |               2 |     72500.0000 |        145000 |
+| IT         |               3 |     79333.3333 |        238000 |
+| Marketing  |               2 |     80000.0000 |        160000 |
++------------+-----------------+----------------+---------------+
+
+
+5) CREATE VIEW employee_manager_info2 AS select concat(a.first_name,b.last_name),a.department,a.salary,concat(b.first_name,b.last_name) as manager_name from employees a join employees b on a.manager_id=b.emp_id;
+
+select * from   employee_manager_info2;
++----------------------------------+------------+--------+--------------+
+| concat(a.first_name,b.last_name) | department | salary | manager_name |
++----------------------------------+------------+--------+--------------+
+| JohnBrown                        | IT         |  75000 | MikeBrown    |
+| SarahWilson                      | HR         |  65000 | TomWilson    |
+| LisaGarcia                       | Finance    |  70000 | EmmaGarcia   |
+| AlexBrown                        | IT         |  68000 | MikeBrown    |
+| MariaTaylor                      | Marketing  |  72000 | DavidTaylor  |
+| JenniferGarcia                   | Finance    |  73000 | EmmaGarcia   |
++----------------------------------+------------+--------+--------------+
+
+6) create view project_team_details1 as select projects.project_name,employees.department,concat(employees.first_name,employees.last_name) as name,employee_projects.role,employee_projects.allocation_percent from employees join employee_projects on employees.emp_id=employee_projects.emp_id join projects on employee_projects.project_id=projects.project_id where status in('In Progress','Planning');
+
+ select * from project_team_details1;
++---------------------+------------+----------------+-------------------+--------------------+
+| project_name        | department | name           | role              | allocation_percent |
++---------------------+------------+----------------+-------------------+--------------------+
+| Mobile App          | IT         | JohnSmith      | Lead Developer    |                 50 |
+| Mobile App          | Finance    | LisaDavis      | Technical Lead    |                 75 |
+| Financial Dashboard | HR         | TomWilson      | Financial Analyst |                 60 |
+| Training Platform   | Finance    | EmmaGarcia     | HR Lead           |                 40 |
+| ERP System          | IT         | AlexMiller     | Project Manager   |                 30 |
+| Financial Dashboard | Marketing  | MariaRodriguez | Finance Lead      |                 60 |
+| Data Analytics      | IT         | AlexMiller     | Data Analyst      |                 80 |
++---------------------+------------+----------------+-------------------+--------------------+
+
+7) CREATE VIEW employee_performance_category1 AS select emp_id,concat(first_name,last_name) as fullname,salary, case when salary>80000 then 'high salary' when salary between 65000 and 80000 then 'Average salary' else 'entry level' end as performence_category  from employees;
+
+select * from  employee_performance_category1;
++--------+------------------+--------+----------------------+
+| emp_id | fullname         | salary | performence_category |
++--------+------------------+--------+----------------------+
+|      1 | JohnSmith        |  75000 | Average salary       |
+|      2 | SarahJohnson     |  65000 | Average salary       |
+|      3 | MikeBrown        |  95000 | high salary          |
+|      4 | LisaDavis        |  70000 | Average salary       |
+|      5 | TomWilson        |  80000 | Average salary       |
+|      6 | EmmaGarcia       |  85000 | high salary          |
+|      7 | AlexMiller       |  68000 | Average salary       |
+|      8 | MariaRodriguez   |  72000 | Average salary       |
+|      9 | DavidTaylor      |  88000 | high salary          |
+|     10 | JenniferAnderson |  73000 | Average salary       |
++--------+------------------+--------+----------------------+
+
+
+8)create view it_employees_contact1 as select emp_id,concat(first_name,last_name) as Name,email from employees where department='IT';
+
+select * from it_employees_contact1;
++--------+------------+-------------------------+
+| emp_id | Name       | email                   |
++--------+------------+-------------------------+
+|      1 | JohnSmith  | john.smith@company.com  |
+|      3 | MikeBrown  | mike.brown@company.com  |
+|      7 | AlexMiller | alex.miller@company.com |
++--------+------------+-------------------------+
+
+9) create view high_budget_projects1 as select project_name,department,budget from projects where budget>(select avg(budget) from projects);
+
+ select * from  high_budget_projects1;
++--------------+------------+--------+
+| project_name | department | budget |
++--------------+------------+--------+
+| HR Portal    | HR         | 100000 |
+| Mobile App   | IT         | 100000 |
+| ERP System   | Finance    | 200000 |
++--------------+------------+--------+
+
+10) create view high_budget_projects1 as select project_name,department,budget from projects where budget>(select avg(budget) from projects);
+
+ select * from monthly_project_summary1;
++---------------------+-------------+------------+
+| count(project_name) | sum(budget) | department |
++---------------------+-------------+------------+
+|                   1 |       75000 | Finance    |
+|                   1 |      100000 | HR         |
+|                   1 |       50000 | IT         |
+|                   1 |       25000 | Marketing  |
++---------------------+-------------+------------+
